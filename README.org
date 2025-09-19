@@ -1,0 +1,103 @@
+#+TITLE: TLD List Repository
+#+AUTHOR: 
+#+DATE: 2025-09-19
+#+DESCRIPTION: A simple tool to download and maintain up-to-date Top-Level Domain (TLD) lists from the official IANA registry
+#+OPTIONS: toc:2
+
+* Overview
+
+A simple tool to download and maintain up-to-date Top-Level Domain (TLD) lists from the official IANA registry.
+
+This repository contains scripts and data files for fetching and processing the official list of Top-Level Domains (TLDs) from the Internet Assigned Numbers Authority (IANA). The tool automatically downloads the latest TLD list and provides both original case and lowercase versions.
+
+* Files
+
+- =refresh= :: Main bash script that downloads and processes TLD data
+- =tlds.txt= :: Lowercase version of the TLD list (processed)
+- =tlds_original.txt= :: Original case TLD list (as downloaded from IANA)
+- =tlds_original.txt.bak= :: Backup of the previous original TLD list
+
+* Usage
+
+** Refreshing TLD Data
+
+To update the TLD lists with the latest data from IANA:
+
+#+BEGIN_SRC bash
+./refresh
+#+END_SRC
+
+The script will:
+1. Download the latest TLD list from https://data.iana.org/TLD/tlds-alpha-by-domain.txt
+2. Create a backup of the existing original file
+3. Save the new data as =tlds_original.txt=
+4. Generate a lowercase version as =tlds.txt=
+
+** Data Format
+
+Both TLD files contain:
+- A header comment with version and last updated timestamp
+- One TLD per line
+- All officially registered top-level domains
+
+Example content:
+#+BEGIN_EXAMPLE
+# Version 2025091800, Last Updated Thu Sep 18 07:07:01 2025 UTC
+AAA
+AARP
+ABB
+ABBOTT
+...
+#+END_EXAMPLE
+
+The lowercase version (=tlds.txt=) contains the same data but with all domains converted to lowercase for easier programmatic processing.
+
+* Features
+
+- *Automatic updates* from the official IANA source
+- *Error handling* with proper exit codes and cleanup
+- *Backup mechanism* to preserve previous versions
+- *Dual format output* (original case + lowercase)
+- *Safe operations* with temporary files and proper cleanup
+
+* Requirements
+
+- Bash shell
+- =curl= for downloading data
+- =tr= for case conversion
+- Standard Unix utilities (=mv=, =rm=, =mktemp=)
+
+* Data Source
+
+The TLD data is sourced directly from IANA (Internet Assigned Numbers Authority):
+
+| Property         | Value                                                    |
+|------------------+----------------------------------------------------------|
+| Source URL       | https://data.iana.org/TLD/tlds-alpha-by-domain.txt      |
+| Authority        | Official registry for internet domain names             |
+| Update frequency | IANA updates this list as new TLDs are approved         |
+
+* Error Handling
+
+The script includes comprehensive error handling:
+- Network failures during download
+- Empty or invalid downloaded files
+- Cleanup of temporary files on exit or interruption
+- Proper exit codes for scripting integration
+
+* Use Cases
+
+This tool is useful for:
+- Domain validation in web applications
+- Email address validation
+- DNS monitoring and analysis
+- Research and data analysis projects
+- Maintaining local TLD databases
+
+* Version Information
+
+| Attribute    | Value                                          |
+|--------------+------------------------------------------------|
+| Data Version | *2025091800*                                   |
+| Last Updated | Thu Sep 18 07:07:01 2025 UTC                  |
+| Total TLDs   | *1440* (excluding header comment)             |

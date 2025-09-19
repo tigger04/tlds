@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+#shellcheck source=shell-and-scripting-helpers/.qfuncs.sh
+# source ~/.qfuncs.sh
+
+set -e -o pipefail
+# shopt -s dotglob lastpipe
+
+source_url=https://data.iana.org/TLD/tlds-alpha-by-domain.txt
+target_lowercase="./tlds.txt"
+target_original="$(basename "$target_lowercase" .txt)"_original.txt
+tempfile="$(mktemp)" || exit 1
+
+cleanup() {
+   if [ -f "$tempfile" ]; then
+      echo "🧹 Cleaning up..." >&2
+      rm -fv "$tempfile" || :
+   fi
+}
+
+trap cleanup EXIT INT TERM HUP QUIT
+
+if curl "$source_url" >"$tempfile"; then
+   if [ -s "$tempfile" ]; then
+      mv "$target_original" "$target_original.bak" 2>/dev/null || :
+      mv "$tempfile" "$target_original" 2>/dev/null || :
+      # Create a lowercase version
+      echo "✅ Refreshed $target_lowercase from $source_url" >&2
+   else
+      echo "⚠️  Downloaded file is empty" >&2
+      exit 1
+   fi >/dev/null
+else
+   echo "❌ Failed to download $source_url" >&2
+   exit 1
+fi
+
+# Create a lowercase version
+tr '[:upper:]' '[:lower:]' <"$target_original" >"$target_lowercase"
+
+# Cleanup temp file if it still exists
+rm -f "$tempfile" >/dev/null 2>&1 || :
