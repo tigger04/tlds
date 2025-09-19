@@ -77,17 +77,9 @@ The TLD data is sourced directly from IANA (Internet Assigned Numbers Authority)
 | Authority        | Official registry for internet domain names             |
 | Update frequency | IANA updates this list as new TLDs are approved         |
 
-* Error Handling
-
-The script includes comprehensive error handling:
-- Network failures during download
-- Empty or invalid downloaded files
-- Cleanup of temporary files on exit or interruption
-- Proper exit codes for scripting integration
-
 * Use Cases
 
-This tool is useful for:
+Might be useful for:
 - Domain validation in web applications
 - Email address validation
 - DNS monitoring and analysis
